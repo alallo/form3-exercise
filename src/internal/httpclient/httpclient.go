@@ -4,51 +4,57 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"time"
 )
 
-var httpClient *http.Client
-
 const requestTimeout = 30
 
-func init() {
-	httpClient = createHTTPClient()
+type Client struct {
+	baseURL    string
+	HTTPClient *http.Client
 }
 
-// createHTTPClient for connection re-use
-func createHTTPClient() *http.Client {
-	client := &http.Client{
-		Transport: &http.Transport{
-			MaxConnsPerHost: 1, //stop creation of unlimited number of connection
-		},
-		Timeout: time.Duration(requestTimeout) * time.Second,
+//CreateHTTPClient creates an HTTPClient to perform an Http request
+func CreateHTTPClient(requestURL string) (*Client, error) {
+	_, err := url.ParseRequestURI(requestURL)
+	if err != nil {
+		return nil, err
 	}
-	return client
+	return &Client{
+		HTTPClient: &http.Client{
+			Timeout: time.Duration(requestTimeout) * time.Second,
+		},
+		baseURL: requestURL,
+	}, nil
 }
 
 //Get send an http get request using the url passed through
 //it also accept a list of headers option to add to the request
-func Get(url string, headers map[string]string, queryParams map[string]string) ([]byte, error) {
+func (c *Client) Get(headers map[string]string, queryParams map[string]string) ([]byte, error) {
 
 	// add parameters to the url
-	url = url + "?"
+	v := url.Values{}
 	for key, value := range queryParams {
-		url = url + key + "=" + value + "&"
+		v.Add(key, value)
 	}
+	uri, _ := url.Parse(c.baseURL)
+	uri.RawQuery = v.Encode()
+	c.baseURL = uri.String()
 
 	// create a new get request
-	req, err := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest("GET", c.baseURL, nil)
 	if err != nil {
 		return nil, err
 	}
-
+	println(c.baseURL)
 	// add headers to the request
 	for key, value := range headers {
 		req.Header.Add(key, value)
 	}
-	println(url)
+
 	// send the http request
-	resp, err := httpClient.Do(req)
+	resp, err := c.HTTPClient.Do(req)
 
 	if err != nil {
 		return nil, err

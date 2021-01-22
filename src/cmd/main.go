@@ -35,12 +35,13 @@ func main() {
 		}
 		if strings.Compare("3", text) == 0 {
 			fmt.Println("List")
-			var filters accountlist.Filters
-			filters.PageNumber = 0
-			filters.PageSize = 100
-			filters.BankID = "1234"
-			filters.AccountNumber = "898888"
-			resp, err := accountlist.GetAccountList("http://localhost:8080/v1/organisation/accounts", &filters)
+			var req accountlist.AccountListRequest
+			req.PageNumber = 0
+			req.PageSize = 100
+			req.Host = "api.form3.tech"
+			req.BankID = []string{"1234", "456", "8963"}
+			req.AccountNumber = []string{"898888, 11111, 2222"}
+			resp, err := accountlist.GetAccountList("http://localhost:8080/v1/organisation/accounts", &req)
 			if err != nil {
 				fmt.Println("Error: ", err)
 				break
