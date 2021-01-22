@@ -126,7 +126,7 @@ func TestGetFailingToCreateHTTPRequest(t *testing.T) {
 	client, _ := CreateHTTPClient(validURL)
 
 	// force client to have invalid base url
-	client.baseURL = "http//myserver"
+	client.baseURL = ""
 
 	resp, _ := client.Get(headers, queryParams)
 	if resp != nil {

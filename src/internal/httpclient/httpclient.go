@@ -47,7 +47,7 @@ func (c *Client) Get(headers map[string]string, queryParams map[string]string) (
 	if err != nil {
 		return nil, err
 	}
-	println(c.baseURL)
+
 	// add headers to the request
 	for key, value := range headers {
 		req.Header.Add(key, value)
@@ -55,7 +55,6 @@ func (c *Client) Get(headers map[string]string, queryParams map[string]string) (
 
 	// send the http request
 	resp, err := c.HTTPClient.Do(req)
-
 	if err != nil {
 		return nil, err
 	}

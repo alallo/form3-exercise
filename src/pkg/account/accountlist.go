@@ -38,9 +38,14 @@ func GetAccountList(url string, request *AccountListRequest) (AccountList, error
 	}
 
 	queryParams := populateQueryParams(request)
-	client := httpclient.CreateHTTPClient(url)
-	resp, err := client.Get(headers, queryParams)
 	var accountlist AccountList
+
+	client, err := httpclient.CreateHTTPClient(url)
+	if err != nil {
+		return accountlist, err
+	}
+
+	resp, err := client.Get(headers, queryParams)
 	if err != nil {
 		return accountlist, err
 	}
@@ -52,11 +57,11 @@ func GetAccountList(url string, request *AccountListRequest) (AccountList, error
 func populateQueryParams(request *AccountListRequest) map[string]string {
 	queryParams := make(map[string]string)
 
-	if request.PageNumber > 0 {
+	if request.PageNumber != defaultPageNumber {
 		queryParams["page[number]"] = strconv.Itoa(request.PageNumber)
 	}
 
-	if request.PageSize != 100 {
+	if request.PageSize != defaultPageSize && request.PageSize != 0 {
 		queryParams["page[size]="] = strconv.Itoa(request.PageSize)
 	}
 
