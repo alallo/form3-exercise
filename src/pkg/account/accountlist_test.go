@@ -1,19 +1,15 @@
-package accountlist
+package account
 
 import (
 	"encoding/json"
-	"fmt"
-	"io"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"reflect"
-	"strings"
 	"testing"
 )
 
 func TestGetAccountList(t *testing.T) {
-	expectedBody, expectedResponse := readAccountsFromFile(t)
+	expectedBody, expectedResponse := GetAccountListMockedResponse(t, "accountlist.json")
 
 	expectedResponseBody := []byte(expectedBody)
 	testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
@@ -69,22 +65,9 @@ func TestGetAccountListNotFoundResponse(t *testing.T) {
 	}
 }
 
-func readAccountsFromFile(t *testing.T) (string, AccountList) {
-	jsonFile, err := os.Open("accountlist.json")
+func GetAccountListMockedResponse(t *testing.T, fileName string) (string, AccountList) {
 
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer jsonFile.Close()
-
-	var buf strings.Builder
-	written, err := io.Copy(&buf, jsonFile)
-	if err != nil || written < 1 {
-		t.Errorf("Something went wrong while reading file: %v", err.Error())
-	}
-
-	// body string in JSON format used for the mock response
-	body := buf.String()
+	body := ReadMockedResponseFromFile(t, fileName)
 
 	var response AccountList
 	json.Unmarshal([]byte(body), &response)

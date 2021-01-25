@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"form3.com/accountlist"
+	"form3.com/account"
 )
 
 func main() {
@@ -32,16 +32,26 @@ func main() {
 		}
 		if strings.Compare("2", text) == 0 {
 			fmt.Println("Fecth")
+			var req account.AccountFetchRequest
+			req.AccountId = "c93d6404-8990-4c6b-81f8-7ce67533733d"
+			req.Host = "api.form3.tech"
+			resp, err := account.GetAccount("http://localhost:8080", &req)
+			if err != nil {
+				fmt.Println("Error: ", err)
+				break
+			} else {
+				fmt.Println(resp.ID)
+			}
 		}
 		if strings.Compare("3", text) == 0 {
 			fmt.Println("List")
-			var req accountlist.AccountListRequest
+			var req account.AccountListRequest
 			req.PageNumber = 0
 			req.PageSize = 100
 			req.Host = "api.form3.tech"
 			req.BankID = []string{"1234", "456", "8963"}
 			req.AccountNumber = []string{"898888, 11111, 2222"}
-			resp, err := accountlist.GetAccountList("http://localhost:8080/v1/organisation/accounts", &req)
+			resp, err := account.GetAccountList("http://localhost:8080", &req)
 			if err != nil {
 				fmt.Println("Error: ", err)
 				break

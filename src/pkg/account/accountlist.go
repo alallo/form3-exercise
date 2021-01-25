@@ -1,4 +1,4 @@
-package accountlist
+package account
 
 import (
 	"encoding/json"
@@ -17,6 +17,8 @@ type AccountList struct {
 
 const defaultPageNumber = 0
 const defaultPageSize = 100
+
+const accountListEndpoint = "/v1/organisation/accounts"
 
 type AccountListRequest struct {
 	PageNumber    int
@@ -40,7 +42,7 @@ func GetAccountList(url string, request *AccountListRequest) (AccountList, error
 	queryParams := populateQueryParams(request)
 	var accountlist AccountList
 
-	client, err := httpclient.CreateHTTPClient(url)
+	client, err := httpclient.CreateHTTPClient(url + accountListEndpoint)
 	if err != nil {
 		return accountlist, err
 	}
