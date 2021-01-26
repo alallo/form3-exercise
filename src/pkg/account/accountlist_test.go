@@ -9,7 +9,7 @@ import (
 )
 
 func TestGetAccountList(t *testing.T) {
-	expectedBody, expectedResponse := GetAccountListMockedResponse(t, "accountlist.json")
+	expectedBody, expectedResponse := getAccountListMockedResponse(t, "accountlist.json")
 
 	expectedResponseBody := []byte(expectedBody)
 	testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
@@ -65,9 +65,9 @@ func TestGetAccountListNotFoundResponse(t *testing.T) {
 	}
 }
 
-func GetAccountListMockedResponse(t *testing.T, fileName string) (string, AccountList) {
+func getAccountListMockedResponse(t *testing.T, fileName string) (string, AccountList) {
 
-	body := ReadMockedResponseFromFile(t, fileName)
+	body := readMockedResponseFromFile(t, fileName)
 
 	var response AccountList
 	json.Unmarshal([]byte(body), &response)

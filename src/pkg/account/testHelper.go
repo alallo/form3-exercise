@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func ReadMockedResponseFromFile(t *testing.T, fileName string) string {
+func readMockedResponseFromFile(t *testing.T, fileName string) string {
 	jsonFile, err := os.Open(fileName)
 
 	if err != nil {
