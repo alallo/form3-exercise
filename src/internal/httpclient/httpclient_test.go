@@ -43,7 +43,7 @@ func TestGetResponseError(t *testing.T) {
 	}
 	expectedStatusMessage := "404 Not Found"
 	if err.Error() != expectedStatusMessage {
-		t.Errorf("request returning a different error status: got %v expected %v", err.Error(), "404 Not Found")
+		t.Errorf("request returning a different error status: got %v expected %v", err.Error(), expectedStatusMessage)
 	}
 }
 
@@ -149,4 +149,82 @@ func TestGetRedirect(t *testing.T) {
 
 func redirectHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "http://blablabla.com", http.StatusFound)
+}
+
+func TestPostOK(t *testing.T) {
+	expectedResponseBody := []byte("body")
+	testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+		res.WriteHeader(200)
+		res.Write(expectedResponseBody)
+	}))
+	defer func() { testServer.Close() }()
+	var headers map[string]string
+	body := []byte("hello world")
+	client, _ := CreateHTTPClient(testServer.URL)
+	res, err := client.Post(headers, body)
+	if err != nil {
+		t.Errorf("request returning a non 200 response: got %v", err)
+	}
+	comparingResult := bytes.Compare(res, expectedResponseBody)
+	if comparingResult != 0 {
+		t.Errorf("request returning a different response body: got %v expected %v", res, expectedResponseBody)
+	}
+}
+
+func TestPostError(t *testing.T) {
+	expectedResponseBody := []byte("something went wrong")
+	testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+		res.WriteHeader(500)
+		res.Write(expectedResponseBody)
+	}))
+	defer func() { testServer.Close() }()
+	var headers map[string]string
+	body := []byte("hello world")
+	client, _ := CreateHTTPClient(testServer.URL)
+	res, err := client.Post(headers, body)
+	if res != nil {
+		t.Errorf("request returning a 200 response status, expected an error")
+	}
+	expectedStatusMessage := "500 Internal Server Error"
+	if err.Error() != expectedStatusMessage {
+		t.Errorf("request returning a different error status: got %v expected %v", err.Error(), expectedStatusMessage)
+	}
+}
+
+func TestPostFailingToCreateHTTPRequest(t *testing.T) {
+	var headers map[string]string
+
+	validURL := "http://myserver.com"
+
+	client, _ := CreateHTTPClient(validURL)
+
+	// force client to have invalid base url
+	client.baseURL = ""
+
+	body := []byte("hello world")
+	resp, _ := client.Post(headers, body)
+	if resp != nil {
+		t.Errorf("Client created with an unsupported protocol")
+	}
+}
+
+func TestPostHeadersAreAdded(t *testing.T) {
+	expectedResponseBody := []byte("body")
+	testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+		res.WriteHeader(200)
+		res.Write(expectedResponseBody)
+	}))
+	defer func() { testServer.Close() }()
+	headers := make(map[string]string)
+	headers["myheader"] = "cool"
+	headers["myheader2"] = "cool2"
+	headers["myheader3"] = "cool3"
+
+	body := []byte("hello world")
+
+	client, _ := CreateHTTPClient(testServer.URL)
+	_, err := client.Post(headers, body)
+	if err != nil {
+		t.Errorf("request returning a non 200 response: got %v", err)
+	}
 }
