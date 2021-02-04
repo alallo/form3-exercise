@@ -4,12 +4,14 @@ import (
 	"bytes"
 	"errors"
 	"io/ioutil"
+	"math"
 	"net/http"
 	"net/url"
 	"time"
 )
 
 const requestTimeout = 30
+const maxRetries = 10
 
 type HttpClient interface {
 	Do(req *http.Request) (*http.Response, error)
@@ -61,15 +63,21 @@ func (c *Client) Get(headers map[string]string, queryParams map[string]string) (
 		req.Header.Add(key, value)
 	}
 
-	// send the http request
-	resp, err := c.HTTPClient.Do(req)
-	if err != nil {
-		return nil, err
+	retryCount := 0
+	retry := true
+	var resp *http.Response
+
+	for retry && retryCount <= maxRetries {
+		resp, err = c.HTTPClient.Do(req)
+		if err != nil {
+			return nil, err
+		}
+		retry = retryRequest(resp.StatusCode, retryCount)
+		retryCount = retryCount + 1
 	}
 
 	// defer and close the body stream
 	defer resp.Body.Close()
-
 	// if response is an error (not a 200)
 	if resp.StatusCode > 299 {
 		return nil, errors.New(resp.Status)
@@ -99,10 +107,17 @@ func (c *Client) Post(headers map[string]string, body []byte) ([]byte, error) {
 		req.Header.Add(key, value)
 	}
 
-	// send the http request
-	resp, err := c.HTTPClient.Do(req)
-	if err != nil {
-		return nil, err
+	retryCount := 0
+	retry := true
+	var resp *http.Response
+
+	for retry && retryCount <= maxRetries {
+		resp, err = c.HTTPClient.Do(req)
+		if err != nil {
+			return nil, err
+		}
+		retry = retryRequest(resp.StatusCode, retryCount)
+		retryCount = retryCount + 1
 	}
 
 	// defer and close the body stream
@@ -143,10 +158,17 @@ func (c *Client) Delete(headers map[string]string, queryParams map[string]string
 		req.Header.Add(key, value)
 	}
 
-	// send the http request
-	resp, err := c.HTTPClient.Do(req)
-	if err != nil {
-		return err
+	retryCount := 0
+	retry := true
+	var resp *http.Response
+
+	for retry && retryCount <= maxRetries {
+		resp, err = c.HTTPClient.Do(req)
+		if err != nil {
+			return err
+		}
+		retry = retryRequest(resp.StatusCode, retryCount)
+		retryCount = retryCount + 1
 	}
 
 	// defer and close the body stream
@@ -158,4 +180,21 @@ func (c *Client) Delete(headers map[string]string, queryParams map[string]string
 	}
 
 	return nil
+}
+
+func retryRequest(statusCode int, retryCount int) bool {
+	if retryCount > 0 {
+		sleepingTime := math.Pow(1.5, float64(retryCount)) * float64(500)
+		time.Sleep(time.Duration(sleepingTime))
+	}
+
+	if statusCode == http.StatusOK {
+		return false
+	} else if statusCode == http.StatusTooManyRequests {
+		return true
+	} else if statusCode == http.StatusInternalServerError {
+		return true
+	} else {
+		return false
+	}
 }

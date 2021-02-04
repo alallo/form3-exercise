@@ -107,6 +107,40 @@ func TestGetError(t *testing.T) {
 	}
 }
 
+func TestGetRetryWhenError(t *testing.T) {
+	callCount := 0
+	const retryCountExpected = 11
+
+	goClient := &MockClient{
+		MockedDo: func(req *http.Request) (*http.Response, error) {
+			callCount = callCount + 1
+
+			return &http.Response{
+				StatusCode: http.StatusInternalServerError,
+				Status:     "Internal Server Error",
+				Body:       ioutil.NopCloser(bytes.NewBufferString("")),
+			}, nil
+		},
+	}
+
+	client := Client{
+		HTTPClient: goClient,
+		baseURL:    testServerUrl,
+	}
+
+	var headers map[string]string
+	var queryParams map[string]string
+
+	res, _ := client.Get(headers, queryParams)
+	if res != nil {
+		t.Errorf("request returning a 200 response status, expected an error")
+	}
+
+	if callCount != retryCountExpected {
+		t.Errorf("Retrying policy not working as expected. Number of retry %v expected %v", callCount, retryCountExpected)
+	}
+}
+
 func TestCreateHTTPClientWithValidURL(t *testing.T) {
 	validURL := "http://myfakeserver.com:8080"
 	client, err := CreateHTTPClient(validURL)
@@ -273,6 +307,40 @@ func TestPostHeadersAreAdded(t *testing.T) {
 	}
 }
 
+func TestPostRetryWhenError(t *testing.T) {
+	callCount := 0
+	const retryCountExpected = 11
+
+	goClient := &MockClient{
+		MockedDo: func(req *http.Request) (*http.Response, error) {
+			callCount = callCount + 1
+
+			return &http.Response{
+				StatusCode: http.StatusInternalServerError,
+				Status:     "Internal Server Error",
+				Body:       ioutil.NopCloser(bytes.NewBufferString("")),
+			}, nil
+		},
+	}
+
+	client := Client{
+		HTTPClient: goClient,
+		baseURL:    testServerUrl,
+	}
+
+	var headers map[string]string
+	body := []byte("hello world")
+
+	res, _ := client.Post(headers, body)
+	if res != nil {
+		t.Errorf("request returning a 200 response status, expected an error")
+	}
+
+	if callCount != retryCountExpected {
+		t.Errorf("Retrying policy not working as expected. Number of retry %v expected %v", callCount, retryCountExpected)
+	}
+}
+
 func TestDeleteResponseOK(t *testing.T) {
 
 	queryParams := make(map[string]string)
@@ -329,5 +397,36 @@ func TestDeleteError(t *testing.T) {
 	err := client.Delete(headers, queryParams)
 	if err.Error() != expectedStatusMessage {
 		t.Errorf("request returning a different error status: got %v expected %v", err.Error(), expectedStatusMessage)
+	}
+}
+
+func TestErrorRetryWhenError(t *testing.T) {
+	callCount := 0
+	const retryCountExpected = 11
+
+	goClient := &MockClient{
+		MockedDo: func(req *http.Request) (*http.Response, error) {
+			callCount = callCount + 1
+
+			return &http.Response{
+				StatusCode: http.StatusInternalServerError,
+				Status:     "Internal Server Error",
+				Body:       ioutil.NopCloser(bytes.NewBufferString("")),
+			}, nil
+		},
+	}
+
+	client := Client{
+		HTTPClient: goClient,
+		baseURL:    testServerUrl,
+	}
+
+	var headers map[string]string
+	var queryParams map[string]string
+
+	client.Delete(headers, queryParams)
+
+	if callCount != retryCountExpected {
+		t.Errorf("Retrying policy not working as expected. Number of retry %v expected %v", callCount, retryCountExpected)
 	}
 }
