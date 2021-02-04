@@ -11,9 +11,13 @@ import (
 
 const requestTimeout = 30
 
+type HttpClient interface {
+	Do(req *http.Request) (*http.Response, error)
+}
+
 type Client struct {
 	baseURL    string
-	HTTPClient *http.Client
+	HTTPClient HttpClient
 }
 
 //CreateHTTPClient creates an HTTPClient to perform an Http request
