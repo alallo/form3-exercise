@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"form3.com/httpclient"
+	"form3.com/models"
 )
 
 const accountCreateEndpoint = "/v1/organisation/accounts"
@@ -16,13 +17,13 @@ type AccountCreateRequest struct {
 }
 
 type Data struct {
-	Account *Account `json:"data"`
+	Account *models.Account `json:"data"`
 }
 
-func CreateAccount(url string, request *AccountCreateRequest) (Account, error) {
+func CreateAccount(url string, request *AccountCreateRequest) (models.Account, error) {
 
 	var data Data
-	var account Account
+	var account models.Account
 
 	body, err := json.Marshal(request.Data)
 	if err != nil {

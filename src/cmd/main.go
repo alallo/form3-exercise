@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 
 	"form3.com/account"
@@ -34,33 +35,49 @@ func main() {
 
 		if strings.Compare("1", text) == 0 {
 			fmt.Println("Create")
+			for {
+				var newAccountAttrs models.AccountAttributes
 
-			var newAccountAttrs models.AccountAttributes
-			newAccountAttrs.Country = "GB"
-			newAccountAttrs.BaseCurrency = "GBP"
-			newAccountAttrs.BankID = "400300"
-			newAccountAttrs.BankIDCode = "GBSDC"
-			newAccountAttrs.Bic = "NWBKGB22"
+				fmt.Print("Country: ")
+				country, _ := reader.ReadString('\n')
+				country = strings.Replace(country, "\n", "", -1)
+				newAccountAttrs.Country = country
 
-			var newAccount models.Account
-			newAccount.ID = uuid.New()
-			newAccount.Type = "accounts"
-			newAccount.OrganisationID = "eb0bd6f5-c3f5-44b2-b677-acd23cdde73c"
-			newAccount.Attributes = &newAccountAttrs
+				fmt.Print("BaseCurrency: ")
+				baseCurrency, _ := reader.ReadString('\n')
+				baseCurrency = strings.Replace(baseCurrency, "\n", "", -1)
+				newAccountAttrs.BaseCurrency = baseCurrency
 
-			var newData account.Data
-			newData.Account = &newAccount
+				fmt.Print("BankID: ")
+				bankID, _ := reader.ReadString('\n')
+				bankID = strings.Replace(bankID, "\n", "", -1)
+				newAccountAttrs.BankID = bankID
 
-			var req account.AccountCreateRequest
-			req.Host = host
-			req.Data = &newData
+				fmt.Print("BankIDCode: ")
+				bankIDCode, _ := reader.ReadString('\n')
+				bankIDCode = strings.Replace(bankIDCode, "\n", "", -1)
+				newAccountAttrs.BankIDCode = bankIDCode
 
-			resp, err := account.CreateAccount(serverURL, &req)
-			if err != nil {
-				fmt.Println("Error: ", err)
+				fmt.Print("Bic: ")
+				bic, _ := reader.ReadString('\n')
+				bic = strings.Replace(bic, "\n", "", -1)
+				newAccountAttrs.Bic = bic
+
+				var newAccount models.Account
+				newAccount.ID = uuid.New()
+				newAccount.Type = "accounts"
+				newAccount.OrganisationID = uuid.New()
+				newAccount.Attributes = &newAccountAttrs
+
+				var newData account.Data
+				newData.Account = &newAccount
+
+				var req account.AccountCreateRequest
+				req.Host = host
+				req.Data = &newData
+
+				createAccount(serverURL, req)
 				break
-			} else {
-				fmt.Println(resp.ID)
 			}
 		}
 		if strings.Compare("2", text) == 0 {
@@ -69,44 +86,54 @@ func main() {
 				fmt.Print("Account ID: ")
 				accountID, _ := reader.ReadString('\n')
 				accountID = strings.Replace(accountID, "\n", "", -1)
-				fecthAccount(host, serverURL, accountID)
+
+				var req account.AccountFetchRequest
+				req.AccountId = accountID
+				req.Host = host
+				fecthAccount(host, serverURL, req)
 				break
 			}
-
 		}
 		if strings.Compare("3", text) == 0 {
 			fmt.Println("List")
-			var req account.AccountListRequest
-			req.PageNumber = 0
-			req.PageSize = 100
-			req.Host = host
-			req.BankID = []string{"1234", "456", "8963"}
-			req.AccountNumber = []string{"898888, 11111, 2222"}
-			resp, err := account.GetAccountList(serverURL, &req)
-			if err != nil {
-				fmt.Println("Error: ", err)
+			for {
+				fmt.Print("Page Number: ")
+				pageNumber, _ := reader.ReadString('\n')
+				pageNumber = strings.Replace(pageNumber, "\n", "", -1)
+				pageNumberInt, _ := strconv.Atoi(pageNumber)
+
+				fmt.Print("Page Size: ")
+				pageSize, _ := reader.ReadString('\n')
+				pageSize = strings.Replace(pageSize, "\n", "", -1)
+				pageSizeInt, _ := strconv.Atoi(pageSize)
+
+				var req account.AccountListRequest
+				req.PageNumber = pageNumberInt
+				req.PageSize = pageSizeInt
+				req.Host = host
+				accountList(serverURL, req)
 				break
-			} else {
-				body, err := json.MarshalIndent(resp, "", "  ")
-				if err != nil {
-					fmt.Println("Error: ", err)
-				}
-				fmt.Println(string(body))
 			}
 
 		}
 		if strings.Compare("4", text) == 0 {
 			fmt.Println("Delete")
-			var req account.AccountDeleteRequest
-			req.Host = host
-			req.AccountID = "c93d6404-8990-4c6b-81f8-7ce67533733d"
-			req.Version = 0
-			err := account.DeleteAccount(serverURL, &req)
-			if err != nil {
-				fmt.Println("Error: ", err)
+			for {
+				fmt.Print("Account ID: ")
+				accountID, _ := reader.ReadString('\n')
+				accountID = strings.Replace(accountID, "\n", "", -1)
+
+				fmt.Print("Version: ")
+				version, _ := reader.ReadString('\n')
+				version = strings.Replace(version, "\n", "", -1)
+				versionInt, _ := strconv.Atoi(version)
+
+				var req account.AccountDeleteRequest
+				req.Host = host
+				req.AccountID = accountID
+				req.Version = versionInt
+				deleteAccount(host, serverURL, req)
 				break
-			} else {
-				fmt.Println("Account deleted succesfuly")
 			}
 
 		}
@@ -118,14 +145,52 @@ func main() {
 
 }
 
-func fecthAccount(host string, serverURL string, accountID string) {
-	var req account.AccountFetchRequest
-	req.AccountId = accountID
-	req.Host = host
-	resp, err := account.GetAccount(serverURL, &req)
+func createAccount(serverURL string, req account.AccountCreateRequest) {
+	resp, err := account.CreateAccount(serverURL, &req)
 	if err != nil {
 		fmt.Println("Error: ", err)
 	} else {
-		fmt.Println(resp.ID)
+		body, err := json.MarshalIndent(resp, "", "  ")
+		if err != nil {
+			fmt.Println("Error: ", err)
+		}
+		fmt.Println(string(body))
+	}
+}
+
+func accountList(serverURL string, req account.AccountListRequest) {
+	resp, err := account.GetAccountList(serverURL, &req)
+	if err != nil {
+		fmt.Println("Error: ", err)
+	} else {
+		body, err := json.MarshalIndent(resp, "", "  ")
+		if err != nil {
+			fmt.Println("Error: ", err)
+		}
+		fmt.Println(string(body))
+	}
+}
+
+func deleteAccount(host string, serverURL string, req account.AccountDeleteRequest) {
+
+	err := account.DeleteAccount(serverURL, &req)
+	if err != nil {
+		fmt.Println("Error: ", err)
+	} else {
+		fmt.Println("Account deleted succesfuly")
+	}
+}
+
+func fecthAccount(host string, serverURL string, req account.AccountFetchRequest) {
+	resp, err := account.GetAccount(serverURL, &req)
+
+	if err != nil {
+		fmt.Println("Error: ", err)
+	} else {
+		body, err := json.MarshalIndent(resp, "", "  ")
+		if err != nil {
+			fmt.Println("Error: ", err)
+		}
+		fmt.Println(string(body))
 	}
 }

@@ -10,9 +10,8 @@ import (
 	"form3.com/models"
 )
 
-type Account = models.Account
 type AccountList struct {
-	Accounts []Account `json:"data"`
+	Accounts []models.Account `json:"data"`
 }
 
 const defaultPageNumber = 0

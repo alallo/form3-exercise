@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"form3.com/models"
+	"github.com/google/uuid"
 )
 
 func TestCreateAccountOK(t *testing.T) {
@@ -29,9 +30,9 @@ func TestCreateAccountOK(t *testing.T) {
 	newAccountAttrs.Name = [4]string{"Samantha Holder"}
 
 	var newAccount models.Account
-	newAccount.ID = "c93d6404-8990-4c6b-81f8-7ce67533734d"
+	newAccount.ID = uuid.New()
 	newAccount.Type = "accounts"
-	newAccount.OrganisationID = "ad27e265-9605-4b4b-a0e5-3003ea9cc4dc"
+	newAccount.OrganisationID = uuid.New()
 	newAccount.Attributes = &newAccountAttrs
 
 	var newData Data

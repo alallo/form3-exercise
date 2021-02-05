@@ -82,7 +82,6 @@ func (c *Client) Get(headers map[string]string, queryParams map[string]string) (
 	if resp.StatusCode > 299 {
 		return nil, errors.New(resp.Status)
 	}
-
 	// read the body as an array of bytes
 	responseBody, err := ioutil.ReadAll(resp.Body)
 	return responseBody, err
