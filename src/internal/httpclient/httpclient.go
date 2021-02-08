@@ -3,6 +3,7 @@ package httpclient
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"math"
 	"net/http"
@@ -182,6 +183,7 @@ func (c *Client) Delete(headers map[string]string, queryParams map[string]string
 }
 
 func retryRequest(statusCode int, retryCount int) bool {
+	fmt.Println("Retry number: ", retryCount)
 	if retryCount > 0 {
 		sleepingTime := math.Pow(1.5, float64(retryCount)) * float64(500)
 		time.Sleep(time.Duration(sleepingTime))
