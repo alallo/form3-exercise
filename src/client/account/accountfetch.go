@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"time"
 
-	"form3.com/httpclient"
-	"form3.com/models"
+	"form3-interview/httpclient"
+	"form3-interview/models"
 )
 
 const accountEndpoint = "/v1/organisation/accounts/"

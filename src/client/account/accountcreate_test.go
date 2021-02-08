@@ -6,7 +6,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"form3.com/models"
+	"form3-interview/models"
+
 	"github.com/google/uuid"
 )
 
