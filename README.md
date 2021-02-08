@@ -3,10 +3,10 @@ Please forgive my sins :-)
 
 ![Image of cat](https://i.pinimg.com/474x/77/ad/93/77ad9387b0e57423b3e00b28116cd393.jpg)
 
-# Description 
+## Description 
 Take home exercise
 
-# Project structure
+## Project structure
 
 Folder Name | Description
 ------------ | -------------
@@ -15,13 +15,13 @@ cmd | Command line app. Useful to play with the client
 internal | packages used by the client that we don't want to expose. This includes a wrapper to help handling an http client
 scripts | docker compose file and DB scripts provided by form3
 
-# Prerequisite
+## Prerequisite
 To run the command line tool and test the client you need
 
 * Go https://golang.org/doc/install
 * Docker https://www.docker.com/get-started
 
-# Getting started 
+## Try it
 
 First of all use the docker compose file from the scripts folder to spin up the form3 API
 
@@ -43,7 +43,40 @@ cd cmd
 SERVER_URL=http://localhost:8080 HOST=http://localhost:8080 go run main.go
 ```
 
-# Testing
+## Example
+```Go
+package main
+
+import (
+	"form3-interview/account"
+	"form3-interview/models"
+)
+
+
+func main() {
+  serverURL := os.Getenv("SERVER_URL")
+  host := os.Getenv("HOST")
+  
+  var req account.AccountListRequest
+  req.PageNumber = pageNumberInt
+  req.PageSize = pageSizeInt
+  req.Host = host
+  
+  resp, err := account.GetAccountList(serverURL, &req)
+  if err != nil {
+    fmt.Println("Error: ", err)
+  } else {
+    body, err := json.MarshalIndent(resp, "", "  ")
+    if err != nil {
+      fmt.Println("Error: ", err)
+    }
+    fmt.Println("List of Accounts:")
+    fmt.Println(string(body))
+  }
+}
+```
+
+## Testing
 To run tests for the client
 
 ```
@@ -60,7 +93,7 @@ go test
 
 
 
-# References
+## References
 This was my first experience with Go so I had to go through different resources to speed up my learning process. Here is a list of websites I have used in the process.
 
 * https://golang.org/doc/tutorial
