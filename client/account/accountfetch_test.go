@@ -61,11 +61,11 @@ func TestGetAccountBadURI(t *testing.T) {
 	}
 }
 
-func getAccountMockedResponse(t *testing.T, fileName string) (string, Account) {
+func getAccountMockedResponse(t *testing.T, fileName string) (string, AccountResponse) {
 
 	body := readMockedResponseFromFile(t, fileName)
 
-	var response Account
+	var response AccountResponse
 	json.Unmarshal([]byte(body), &response)
 
 	return body, response

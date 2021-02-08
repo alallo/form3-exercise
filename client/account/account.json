@@ -1,20 +1,22 @@
 {
-    "type": "accounts",
-    "id": "ea6239c1-99e9-42b3-bca1-92f5c068da6b",
-    "organisation_id": "eb0bd6f5-c3f5-44b2-b677-acd23cdde73c",
-    "version": 0,
-    "attributes": {
-        "country": "GB",
-        "base_currency": "GBP",
-        "account_number": "76357283",
-        "bank_id": "400305",
-        "bank_id_code": "GBDSC",
-        "bic": "LHVBEE22",
-        "iban": "EE209642394169415743",
-        "account_classification": "Personal",
-        "joint_account": false,
-        "switched": false,
-        "account_matching_opt_out": false,
-        "status": "confirmed"
+    "data": {
+        "type": "accounts",
+        "id": "ea6239c1-99e9-42b3-bca1-92f5c068da6b",
+        "organisation_id": "eb0bd6f5-c3f5-44b2-b677-acd23cdde73c",
+        "version": 0,
+        "attributes": {
+            "country": "GB",
+            "base_currency": "GBP",
+            "account_number": "76357283",
+            "bank_id": "400305",
+            "bank_id_code": "GBDSC",
+            "bic": "LHVBEE22",
+            "iban": "EE209642394169415743",
+            "account_classification": "Personal",
+            "joint_account": false,
+            "switched": false,
+            "account_matching_opt_out": false,
+            "status": "confirmed"
+        }
     }
 }

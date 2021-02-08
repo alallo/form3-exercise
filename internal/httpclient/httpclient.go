@@ -63,21 +63,11 @@ func (c *Client) Get(headers map[string]string, queryParams map[string]string) (
 		request.Header.Add(key, value)
 	}
 
-	retryCount := 0
-	retry := true
-	var response *http.Response
-
-	for retry && retryCount <= maxRetries {
-		response, err = c.HTTPClient.Do(request)
-		if err != nil {
-			return nil, err
-		}
-		//retry = retryRequest(response.StatusCode, retryCount)
-		retryCount = retryCount + 1
+	response, err := c.sendRequestWithRetry(request)
+	if err != nil {
+		return nil, err
 	}
 
-	// defer and close the body stream
-	defer response.Body.Close()
 	// if response is an error (not a 200)
 	if response.StatusCode > 299 {
 		return nil, errors.New(response.Status)
@@ -107,6 +97,9 @@ func (c *Client) Post(headers map[string]string, body []byte) ([]byte, error) {
 	}
 
 	response, err := c.sendRequestWithRetry(request)
+	if err != nil {
+		return nil, err
+	}
 
 	// if response is an error (not a 200)
 	if response.StatusCode > 299 {
@@ -143,21 +136,10 @@ func (c *Client) Delete(headers map[string]string, queryParams map[string]string
 		request.Header.Add(key, value)
 	}
 
-	retryCount := 0
-	retry := true
-	var response *http.Response
-
-	for retry && retryCount <= maxRetries {
-		response, err = c.HTTPClient.Do(request)
-		if err != nil {
-			return err
-		}
-		//retry = retryRequest(response.StatusCode, retryCount)
-		retryCount = retryCount + 1
+	response, err := c.sendRequestWithRetry(request)
+	if err != nil {
+		return err
 	}
-
-	// defer and close the body stream
-	defer response.Body.Close()
 
 	// if response is an error (not a 204)
 	if response.StatusCode != 204 {
