@@ -64,6 +64,16 @@ func main() {
 				bic = strings.Replace(bic, "\n", "", -1)
 				newAccountAttrs.Bic = bic
 
+				fmt.Print("AccountNumber: ")
+				accountNumber, _ := reader.ReadString('\n')
+				accountNumber = strings.Replace(accountNumber, "\n", "", -1)
+				newAccountAttrs.AccountNumber = accountNumber
+
+				fmt.Print("CustomerID: ")
+				customerID, _ := reader.ReadString('\n')
+				customerID = strings.Replace(customerID, "\n", "", -1)
+				newAccountAttrs.CustomerID = customerID
+
 				var newAccount models.Account
 				newAccount.ID = uuid.New()
 				newAccount.Type = "accounts"

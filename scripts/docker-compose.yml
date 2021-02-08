@@ -33,7 +33,7 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=password
     volumes:
-      - ./scripts/db:/docker-entrypoint-initdb.d/
+      - ./db:/docker-entrypoint-initdb.d/
     ports:
       - 5432:5432
 

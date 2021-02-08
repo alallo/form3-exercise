@@ -20,7 +20,9 @@ const defaultPageSize = 100
 const accountListEndpoint = "/v1/organisation/accounts"
 
 type AccountListRequest struct {
-	PageNumber    int
+	// Page number being requested
+	PageNumber int
+	// Size of the page being requested
 	PageSize      int
 	BankID        []string
 	AccountNumber []string

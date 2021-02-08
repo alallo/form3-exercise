@@ -1,4 +1,5 @@
 # First time writing code in Go 
+Name: Alessandro Lallo (alessandro.lallo@gmail.com)
 Please forgive my sins :-) 
 
 ![Image of cat](https://i.pinimg.com/474x/77/ad/93/77ad9387b0e57423b3e00b28116cd393.jpg)
