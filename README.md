@@ -1,15 +1,19 @@
 # First time writing code in Go 
 Please forgive my sins :-) 
 
+![Image of cat](https://i.pinimg.com/474x/77/ad/93/77ad9387b0e57423b3e00b28116cd393.jpg)
+
 # Description 
 Take home exercise
 
 # Project structure
-   .
-    ├── client                  # a Go client to inteface with form3 APIs. This implements some of the "Account" functionalities
-    ├── cmd                     # Command line app. Useful to play with the client
-    ├── internal                # packages used by the client that we don't want to expose. This includes a wrapper to help handling an http client
-    └── scripts                 # docker compose file and DB scripts provided by form3
+
+Folder Name | Description
+------------ | -------------
+client | a Go client to inteface with form3 APIs. This implements some of the "Account" functionalities
+cmd | Command line app. Useful to play with the client
+internal | packages used by the client that we don't want to expose. This includes a wrapper to help handling an http client
+scripts | docker compose file and DB scripts provided by form3
 
 # Prerequisite
 To run the command line tool and test the client you need
