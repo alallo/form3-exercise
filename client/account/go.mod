@@ -1,4 +1,4 @@
-module github.com/alallo/form3-interview
+module account
 
 go 1.15
 

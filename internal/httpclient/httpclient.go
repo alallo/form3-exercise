@@ -3,7 +3,6 @@ package httpclient
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"math"
 	"net/http"
@@ -54,37 +53,37 @@ func (c *Client) Get(headers map[string]string, queryParams map[string]string) (
 	c.baseURL = uri.String()
 
 	// create a new get request
-	req, err := http.NewRequest("GET", c.baseURL, nil)
+	request, err := http.NewRequest("GET", c.baseURL, nil)
 	if err != nil {
 		return nil, err
 	}
 
 	// add headers to the request
 	for key, value := range headers {
-		req.Header.Add(key, value)
+		request.Header.Add(key, value)
 	}
 
 	retryCount := 0
 	retry := true
-	var resp *http.Response
+	var response *http.Response
 
 	for retry && retryCount <= maxRetries {
-		resp, err = c.HTTPClient.Do(req)
+		response, err = c.HTTPClient.Do(request)
 		if err != nil {
 			return nil, err
 		}
-		retry = retryRequest(resp.StatusCode, retryCount)
+		//retry = retryRequest(response.StatusCode, retryCount)
 		retryCount = retryCount + 1
 	}
 
 	// defer and close the body stream
-	defer resp.Body.Close()
+	defer response.Body.Close()
 	// if response is an error (not a 200)
-	if resp.StatusCode > 299 {
-		return nil, errors.New(resp.Status)
+	if response.StatusCode > 299 {
+		return nil, errors.New(response.Status)
 	}
 	// read the body as an array of bytes
-	responseBody, err := ioutil.ReadAll(resp.Body)
+	responseBody, err := ioutil.ReadAll(response.Body)
 	return responseBody, err
 }
 
@@ -97,39 +96,25 @@ func (c *Client) Post(headers map[string]string, body []byte) ([]byte, error) {
 	c.baseURL = uri.String()
 
 	// create a new post request
-	req, err := http.NewRequest("POST", c.baseURL, bytes.NewBuffer(body))
+	request, err := http.NewRequest("POST", c.baseURL, bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err
 	}
 
 	// add headers to the request
 	for key, value := range headers {
-		req.Header.Add(key, value)
+		request.Header.Add(key, value)
 	}
 
-	retryCount := 0
-	retry := true
-	var resp *http.Response
-
-	for retry && retryCount <= maxRetries {
-		resp, err = c.HTTPClient.Do(req)
-		if err != nil {
-			return nil, err
-		}
-		retry = retryRequest(resp.StatusCode, retryCount)
-		retryCount = retryCount + 1
-	}
-
-	// defer and close the body stream
-	defer resp.Body.Close()
+	response, err := c.sendRequestWithRetry(request)
 
 	// if response is an error (not a 200)
-	if resp.StatusCode > 299 {
-		return nil, errors.New(resp.Status)
+	if response.StatusCode > 299 {
+		return nil, errors.New(response.Status)
 	}
 
 	// read the body as an array of bytes
-	responseBody, err := ioutil.ReadAll(resp.Body)
+	responseBody, err := ioutil.ReadAll(response.Body)
 	return responseBody, err
 }
 
@@ -148,54 +133,94 @@ func (c *Client) Delete(headers map[string]string, queryParams map[string]string
 	c.baseURL = uri.String()
 
 	// create a new delete request
-	req, err := http.NewRequest("DELETE", c.baseURL, nil)
+	request, err := http.NewRequest("DELETE", c.baseURL, nil)
 	if err != nil {
 		return err
 	}
 
 	// add headers to the request
 	for key, value := range headers {
-		req.Header.Add(key, value)
+		request.Header.Add(key, value)
 	}
 
 	retryCount := 0
 	retry := true
-	var resp *http.Response
+	var response *http.Response
 
 	for retry && retryCount <= maxRetries {
-		resp, err = c.HTTPClient.Do(req)
+		response, err = c.HTTPClient.Do(request)
 		if err != nil {
 			return err
 		}
-		retry = retryRequest(resp.StatusCode, retryCount)
+		//retry = retryRequest(response.StatusCode, retryCount)
 		retryCount = retryCount + 1
 	}
 
 	// defer and close the body stream
-	defer resp.Body.Close()
+	defer response.Body.Close()
 
 	// if response is an error (not a 204)
-	if resp.StatusCode != 204 {
-		return errors.New(resp.Status)
+	if response.StatusCode != 204 {
+		return errors.New(response.Status)
 	}
 
 	return nil
 }
 
-func retryRequest(statusCode int, retryCount int) bool {
-	fmt.Println("Retry number: ", retryCount)
-	if retryCount > 0 {
-		sleepingTime := math.Pow(1.5, float64(retryCount)) * float64(500)
-		time.Sleep(time.Duration(sleepingTime))
+func (c *Client) sendRequestWithRetry(request *http.Request) (*http.Response, error) {
+
+	retryCount := 0
+	retry := true
+	var response *http.Response
+	var err error
+	var data []byte
+
+	// check if body is not null. We need to store it in order to be used in case of retry
+	if request.Body != nil {
+		data, err = ioutil.ReadAll(request.Body)
+		if err != nil {
+			return nil, err
+		}
+		err = request.Body.Close()
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	if statusCode == http.StatusOK {
-		return false
-	} else if statusCode == http.StatusTooManyRequests {
-		return true
-	} else if statusCode == http.StatusInternalServerError {
-		return true
-	} else {
-		return false
+	// if we need to retry and we have not exceed the retry limit
+	for retry && retryCount <= maxRetries {
+
+		// if we need to retry then wait
+		if retryCount > 0 {
+			// sleeping time is calculated has 1.5^number of retry multiplied 500
+			sleepingTime := math.Pow(1.5, float64(retryCount)) * float64(500)
+			time.Sleep(time.Duration(sleepingTime))
+		}
+
+		// populate the body
+		request.Body = ioutil.NopCloser(bytes.NewReader(data))
+		// send the request
+		response, err = c.HTTPClient.Do(request)
+		if err != nil {
+			return nil, err
+		}
+
+		// based on status code, do we need a retry?
+		if response.StatusCode == http.StatusTooManyRequests || response.StatusCode == http.StatusInternalServerError || response.StatusCode == http.StatusBadGateway || response.StatusCode == http.StatusServiceUnavailable || response.StatusCode == http.StatusGatewayTimeout {
+			retryCount = retryCount + 1
+			retry = true
+		} else {
+			retry = false
+		}
 	}
+
+	if request.Body != nil {
+		// close the original body, we don't need it anymore
+		if err := request.Body.Close(); err != nil {
+			return nil, err
+		}
+	}
+
+	return response, nil
+
 }
