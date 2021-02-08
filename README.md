@@ -1,9 +1,23 @@
 # First time writing code in Go 
-# form3-interview
+Please forgive my sins :-) 
+
+# Description 
 Take home exercise
 
+# Project structure
+How is the project structured
+
+# Installation 
+How to install the package
+
+# Usage
+How to use it
+
+# Testing
+How to run tests
+
 # References
-This was my first experience with Go so I had to go through different resources to speed up my learning process. Here is a list of website I have used in the process.
+This was my first experience with Go so I had to go through different resources to speed up my learning process. Here is a list of websites I have used in the process.
 
 https://golang.org/doc/tutorial/
 https://golang.org/pkg
