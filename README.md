@@ -5,7 +5,14 @@ Please forgive my sins :-)
 ![Image of cat](https://i.pinimg.com/474x/77/ad/93/77ad9387b0e57423b3e00b28116cd393.jpg)
 
 ## Description 
-Take home exercise
+Take home exercise done as part of the form3 hiring process. 
+
+The project is formed by 3 main bits:
+* the client, to access some of the account functionalities available through the light version of the API available
+* httpclient, a wrapper for the http functionalities
+* cmd, a command line useful to manually try the client and interact with the API
+
+Whatever is the result of the review, I have really enjoyed this experience and I will continue to explore the Go language in the future.
 
 ## Project structure
 
