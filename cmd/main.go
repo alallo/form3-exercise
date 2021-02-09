@@ -83,7 +83,7 @@ func main() {
 				var newData account.Data
 				newData.Account = &newAccount
 
-				var req account.AccountCreateRequest
+				var req account.CreateRequest
 				req.Host = host
 				req.Data = &newData
 
@@ -98,8 +98,8 @@ func main() {
 				accountID, _ := reader.ReadString('\n')
 				accountID = strings.Replace(accountID, "\n", "", -1)
 
-				var req account.AccountFetchRequest
-				req.AccountId = accountID
+				var req account.FetchRequest
+				req.AccountID = accountID
 				req.Host = host
 				fecthAccount(host, serverURL, req)
 				break
@@ -118,7 +118,7 @@ func main() {
 				pageSize = strings.Replace(pageSize, "\n", "", -1)
 				pageSizeInt, _ := strconv.Atoi(pageSize)
 
-				var req account.AccountListRequest
+				var req account.ListRequest
 				req.PageNumber = pageNumberInt
 				req.PageSize = pageSizeInt
 				req.Host = host
@@ -139,7 +139,7 @@ func main() {
 				version = strings.Replace(version, "\n", "", -1)
 				versionInt, _ := strconv.Atoi(version)
 
-				var req account.AccountDeleteRequest
+				var req account.DeleteRequest
 				req.Host = host
 				req.AccountID = accountID
 				req.Version = versionInt
@@ -156,7 +156,7 @@ func main() {
 
 }
 
-func createAccount(serverURL string, req account.AccountCreateRequest) {
+func createAccount(serverURL string, req account.CreateRequest) {
 	resp, err := account.CreateAccount(serverURL, &req)
 	if err != nil {
 		fmt.Println("Error: ", err)
@@ -169,7 +169,7 @@ func createAccount(serverURL string, req account.AccountCreateRequest) {
 	}
 }
 
-func accountList(serverURL string, req account.AccountListRequest) {
+func accountList(serverURL string, req account.ListRequest) {
 	resp, err := account.GetAccountList(serverURL, &req)
 	if err != nil {
 		fmt.Println("Error: ", err)
@@ -182,7 +182,7 @@ func accountList(serverURL string, req account.AccountListRequest) {
 	}
 }
 
-func deleteAccount(host string, serverURL string, req account.AccountDeleteRequest) {
+func deleteAccount(host string, serverURL string, req account.DeleteRequest) {
 
 	err := account.DeleteAccount(serverURL, &req)
 	if err != nil {
@@ -192,7 +192,7 @@ func deleteAccount(host string, serverURL string, req account.AccountDeleteReque
 	}
 }
 
-func fecthAccount(host string, serverURL string, req account.AccountFetchRequest) {
+func fecthAccount(host string, serverURL string, req account.FetchRequest) {
 	resp, err := account.GetAccount(serverURL, &req)
 
 	if err != nil {

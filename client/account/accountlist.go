@@ -1,3 +1,4 @@
+// Package account provides methods for creating, retrieving or deleteing accounts.
 package account
 
 import (
@@ -10,6 +11,7 @@ import (
 	"form3-interview/models"
 )
 
+// AccountList wraps an array of accounts in a Data object. Used for json conversion
 type AccountList struct {
 	Accounts []models.Account `json:"data"`
 }
@@ -19,7 +21,8 @@ const defaultPageSize = 100
 
 const accountListEndpoint = "/v1/organisation/accounts"
 
-type AccountListRequest struct {
+// ListRequest contains the filter used to get a list of accounts
+type ListRequest struct {
 	// Page number being requested
 	PageNumber int
 	// Size of the page being requested
@@ -32,7 +35,12 @@ type AccountListRequest struct {
 	Host          string
 }
 
-func GetAccountList(url string, request *AccountListRequest) (AccountList, error) {
+// GetAccountList call the endpoint to fetch a list of accounts.
+// It needs a ListRequest containing the filters to apply to the list
+// The list can be filtered by BankIDs, Account Numbers, Ibans,CustomerIDs and/or Countries
+// It returns a list of Accounts matching the filter specified in the request
+// https://api-docs.form3.tech/api.html#organisation-accounts-list
+func GetAccountList(url string, request *ListRequest) ([]models.Account, error) {
 
 	var headers = map[string]string{
 		"Host":   request.Host,
@@ -41,23 +49,24 @@ func GetAccountList(url string, request *AccountListRequest) (AccountList, error
 	}
 
 	queryParams := populateQueryParams(request)
-	var accountlist AccountList
 
 	client, err := httpclient.CreateHTTPClient(url + accountListEndpoint)
 	if err != nil {
-		return accountlist, err
+		return nil, err
 	}
 
 	resp, err := client.Get(headers, queryParams)
 	if err != nil {
-		return accountlist, err
+		return nil, err
 	}
 
+	var accountlist AccountList
 	json.Unmarshal(resp, &accountlist)
-	return accountlist, err
+
+	return accountlist.Accounts, err
 }
 
-func populateQueryParams(request *AccountListRequest) map[string]string {
+func populateQueryParams(request *ListRequest) map[string]string {
 	queryParams := make(map[string]string)
 
 	if request.PageNumber != defaultPageNumber {

@@ -13,7 +13,7 @@ import (
 
 func TestCreateAccountOK(t *testing.T) {
 
-	expectedBody, expectedResponse := getCreateAccountMockedResponse(t, "newaccount.json")
+	expectedBody, expectedResponse := getCreateAccountMockedResponse(t, "testJson/newaccount.json")
 	expectedResponseBody := []byte(expectedBody)
 	testServer := httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 		res.WriteHeader(200)
@@ -39,7 +39,7 @@ func TestCreateAccountOK(t *testing.T) {
 	var newData Data
 	newData.Account = &newAccount
 
-	var req AccountCreateRequest
+	var req CreateRequest
 	req.Host = "api.form3.tech"
 	req.Data = &newData
 
@@ -92,7 +92,7 @@ func TestCreateAccountFailed(t *testing.T) {
 	}))
 	defer func() { testServer.Close() }()
 
-	var req AccountCreateRequest
+	var req CreateRequest
 	_, err := CreateAccount(testServer.URL, &req)
 
 	if err.Error() != "409 Conflict" {
@@ -101,7 +101,7 @@ func TestCreateAccountFailed(t *testing.T) {
 }
 
 func TestCreateAccountBadURI(t *testing.T) {
-	var req AccountCreateRequest
+	var req CreateRequest
 
 	_, err := CreateAccount("foo", &req)
 	if err == nil {

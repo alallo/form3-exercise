@@ -58,7 +58,7 @@ func main() {
   serverURL := os.Getenv("SERVER_URL")
   host := os.Getenv("HOST")
   
-  var req account.AccountListRequest
+  var req account.ListRequest
   req.PageNumber = pageNumberInt
   req.PageSize = pageSizeInt
   req.Host = host

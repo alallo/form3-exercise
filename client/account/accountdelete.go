@@ -1,3 +1,4 @@
+// Package account provides methods for creating, retrieving or deleteing accounts.
 package account
 
 import (
@@ -7,13 +8,18 @@ import (
 	"form3-interview/httpclient"
 )
 
-type AccountDeleteRequest struct {
+// DeleteRequest contains the account ID and version of the account to be deleted
+type DeleteRequest struct {
 	AccountID string
 	Version   int
 	Host      string
 }
 
-func DeleteAccount(url string, request *AccountDeleteRequest) error {
+// DeleteAccount call the endpoint to delete an existing account.
+// It needs and DeleteRequest containing the Account ID and the version of the account
+// It returns an error if the operation fails
+// https://api-docs.form3.tech/api.html#organisation-accounts-delete
+func DeleteAccount(url string, request *DeleteRequest) error {
 
 	var headers = map[string]string{
 		"Host":   request.Host,

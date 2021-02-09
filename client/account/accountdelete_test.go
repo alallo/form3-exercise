@@ -14,7 +14,7 @@ func TestDeleteAccount(t *testing.T) {
 	}))
 	defer func() { testServer.Close() }()
 
-	var req AccountDeleteRequest
+	var req DeleteRequest
 	req.AccountID = "c93d6404-8990-4c6b-81f8-7ce67533733d"
 	req.Version = 0
 	req.Host = "myapi.form3.com"
@@ -33,7 +33,7 @@ func TestDeleteAccountFailed(t *testing.T) {
 	}))
 	defer func() { testServer.Close() }()
 
-	var req AccountDeleteRequest
+	var req DeleteRequest
 	req.AccountID = "c93d6404-8990-4c6b-81f8-7ce67533733d"
 	req.Version = 0
 	req.Host = "myapi.form3.com"
@@ -45,7 +45,7 @@ func TestDeleteAccountFailed(t *testing.T) {
 }
 
 func TestDeleteAccountInvalidUrl(t *testing.T) {
-	var req AccountDeleteRequest
+	var req DeleteRequest
 	err := DeleteAccount("http//foo", &req)
 	if err == nil {
 		t.Errorf("Request is returning a response with an invalid URL")
