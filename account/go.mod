@@ -2,7 +2,7 @@ module account
 
 go 1.15
 
-replace form3-interview/httpclient => ../../internal/httpclient
+replace form3-interview/httpclient => ../httpclient
 
 replace form3-interview/models => ../models
 

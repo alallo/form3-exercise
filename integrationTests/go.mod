@@ -1,4 +1,4 @@
-module main
+module integration
 
 go 1.15
 

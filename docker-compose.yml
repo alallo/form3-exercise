@@ -1,6 +1,15 @@
 version: '3'
 
 services:
+  form3-account-tests:
+    build:
+        dockerfile: dockerfile
+        context: .
+    depends_on: 
+      - accountapi
+    environment: 
+      - SERVER_URL=http://accountapi:8080
+
   accountapi:
     image: form3tech/interview-accountapi:v1.0.0-4-g63cf8434
     restart: on-failure
@@ -33,7 +42,7 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=password
     volumes:
-      - ./db:/docker-entrypoint-initdb.d/
+      - ./scripts/db:/docker-entrypoint-initdb.d/
     ports:
       - 5432:5432
 

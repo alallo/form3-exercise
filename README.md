@@ -110,7 +110,7 @@ go test
   * joint_account
   * switched
   * account_matching_opt_out
-
+* The IBAN field is processed by the API when creating an account (an error is returned when an invalid IBAN is sent) but is not persisted in the database
 
 ## References
 This was my first experience with Go so I had to go through different resources to speed up my learning process. Here is a list of websites I have used in the process.
@@ -130,3 +130,5 @@ This was my first experience with Go so I had to go through different resources 
 * https://blog.alexellis.io/golang-writing-unit-tests
 
 * https://blog.questionable.services/article/testing-http-handlers-go
+
+* https://www.ardanlabs.com/blog/2019/03/integration-testing-in-go-executing-tests-with-docker.html
