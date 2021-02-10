@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/google/uuid"
 )
 
 func TestGetAccount(t *testing.T) {
@@ -18,7 +20,7 @@ func TestGetAccount(t *testing.T) {
 	defer func() { testServer.Close() }()
 
 	var req FetchRequest
-	req.AccountID = "ea6239c1-99e9-42b3-bca1-92f5c068da6b"
+	req.AccountID, _ = uuid.Parse("ea6239c1-99e9-42b3-bca1-92f5c068da6b")
 	req.Host = "myapi.form3.com"
 
 	resp, err := GetAccount(testServer.URL, &req)
@@ -99,7 +101,7 @@ func TestGetAccountNotFound(t *testing.T) {
 	defer func() { testServer.Close() }()
 
 	var req FetchRequest
-	req.AccountID = "ea6239c1-99e9-42b3-bca1-92f5c068da6b"
+	req.AccountID = uuid.New()
 	req.Host = "myapi.form3.com"
 
 	_, err := GetAccount(testServer.URL, &req)
@@ -110,7 +112,7 @@ func TestGetAccountNotFound(t *testing.T) {
 
 func TestGetAccountBadURI(t *testing.T) {
 	var req FetchRequest
-	req.AccountID = "ea6239c1-99e9-42b3-bca1-92f5c068da6b"
+	req.AccountID = uuid.New()
 	req.Host = "myapi.form3.com"
 
 	_, err := GetAccount("foo", &req)

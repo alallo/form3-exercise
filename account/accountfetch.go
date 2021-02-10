@@ -8,6 +8,8 @@ import (
 
 	"form3-interview/httpclient"
 	"form3-interview/models"
+
+	"github.com/google/uuid"
 )
 
 const accountEndpoint = "/v1/organisation/accounts/"
@@ -19,7 +21,7 @@ type AccountResponse struct {
 
 // FetchRequest contains the account ID to find and the host
 type FetchRequest struct {
-	AccountID string
+	AccountID uuid.UUID
 	Host      string
 }
 
@@ -31,7 +33,7 @@ type FetchRequest struct {
 func GetAccount(url string, request *FetchRequest) (*models.Account, error) {
 
 	// this check is needed to avoid making this a call to get a list of accounts
-	if request.AccountID == "" {
+	if request.AccountID.String() == "" {
 		return nil, errors.New("AccountID is mandatory to fetch an account")
 	}
 
@@ -43,7 +45,7 @@ func GetAccount(url string, request *FetchRequest) (*models.Account, error) {
 
 	var accountResponse AccountResponse
 
-	client, err := httpclient.CreateHTTPClient(url + accountEndpoint + request.AccountID)
+	client, err := httpclient.CreateHTTPClient(url + accountEndpoint + request.AccountID.String())
 	if err != nil {
 		return nil, err
 	}

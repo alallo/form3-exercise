@@ -6,11 +6,13 @@ import (
 	"time"
 
 	"form3-interview/httpclient"
+
+	"github.com/google/uuid"
 )
 
 // DeleteRequest contains the account ID and version of the account to be deleted
 type DeleteRequest struct {
-	AccountID string
+	AccountID uuid.UUID
 	Version   int
 	Host      string
 }
@@ -27,7 +29,7 @@ func DeleteAccount(url string, request *DeleteRequest) error {
 		"Accept": "application/vnd.api+json",
 	}
 
-	client, err := httpclient.CreateHTTPClient(url + accountEndpoint + request.AccountID)
+	client, err := httpclient.CreateHTTPClient(url + accountEndpoint + request.AccountID.String())
 	if err != nil {
 		return err
 	}

@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/google/uuid"
 )
 
 func TestDeleteAccount(t *testing.T) {
@@ -15,7 +17,7 @@ func TestDeleteAccount(t *testing.T) {
 	defer func() { testServer.Close() }()
 
 	var req DeleteRequest
-	req.AccountID = "c93d6404-8990-4c6b-81f8-7ce67533733d"
+	req.AccountID = uuid.New()
 	req.Version = 0
 	req.Host = "myapi.form3.com"
 
@@ -34,7 +36,7 @@ func TestDeleteAccountFailed(t *testing.T) {
 	defer func() { testServer.Close() }()
 
 	var req DeleteRequest
-	req.AccountID = "c93d6404-8990-4c6b-81f8-7ce67533733d"
+	req.AccountID = uuid.New()
 	req.Version = 0
 	req.Host = "myapi.form3.com"
 
