@@ -28,7 +28,16 @@ func TestCreateAccountOK(t *testing.T) {
 	newAccountAttrs.BankIDCode = "GBSDC"
 	newAccountAttrs.Bic = "NWBKGB22"
 	newAccountAttrs.AccountNumber = "41426819"
-	newAccountAttrs.Name = [4]string{"Samantha Holder"}
+	newAccountAttrs.Iban = "GB11NWBK40030041426819"
+	newAccountAttrs.CustomerID = "Ref123"
+	newAccountAttrs.FirstName = "Alessandro"
+	newAccountAttrs.BankAccountName = "Alessandro Lallo"
+	newAccountAttrs.AlternativeBankAccountNames = []string{"Alessandro", "Paolo", "Maria"}
+	newAccountAttrs.AccountClassification = "Personal"
+	newAccountAttrs.JointAccount = false
+	newAccountAttrs.Switched = true
+	newAccountAttrs.AccountMatchingOptOut = false
+	newAccountAttrs.SecondaryIdentification = "A1B2C3D4"
 
 	var newAccount models.Account
 	newAccount.ID = uuid.New()
@@ -77,11 +86,38 @@ func TestCreateAccountOK(t *testing.T) {
 	if resp.Attributes.AccountNumber != expectedResponse.Account.Attributes.AccountNumber {
 		t.Errorf("Response contains wrong AccountNumber, got %v expected %v", resp.Attributes.AccountNumber, expectedResponse.Account.Attributes.AccountNumber)
 	}
-	if resp.Attributes.Name[0] != expectedResponse.Account.Attributes.Name[0] {
-		t.Errorf("Response contains wrong Name, got %v expected %v", resp.Attributes.Name[0], expectedResponse.Account.Attributes.Name[0])
+	if resp.Attributes.Iban != expectedResponse.Account.Attributes.Iban {
+		t.Errorf("Response contains wrong Iban, got %v expected %v", resp.Attributes.Iban, expectedResponse.Account.Attributes.Iban)
 	}
-	if resp.Attributes.Status != "pending" {
-		t.Errorf("The status expected is not right")
+	if resp.Attributes.CustomerID != expectedResponse.Account.Attributes.CustomerID {
+		t.Errorf("Response contains wrong CustomerID, got %v expected %v", resp.Attributes.CustomerID, expectedResponse.Account.Attributes.CustomerID)
+	}
+	if resp.Attributes.FirstName != expectedResponse.Account.Attributes.FirstName {
+		t.Errorf("Response contains wrong FirstName, got %v expected %v", resp.Attributes.FirstName, expectedResponse.Account.Attributes.FirstName)
+	}
+	if resp.Attributes.BankAccountName != expectedResponse.Account.Attributes.BankAccountName {
+		t.Errorf("Response contains wrong BankAccountName, got %v expected %v", resp.Attributes.BankAccountName, expectedResponse.Account.Attributes.BankAccountName)
+	}
+	if resp.Attributes.AlternativeBankAccountNames[0] != expectedResponse.Account.Attributes.AlternativeBankAccountNames[0] {
+		t.Errorf("Response contains wrong AlternativeBankAccountNames, got %v expected %v", resp.Attributes.AlternativeBankAccountNames[0], expectedResponse.Account.Attributes.AlternativeBankAccountNames[0])
+	}
+	if resp.Attributes.AccountClassification != expectedResponse.Account.Attributes.AccountClassification {
+		t.Errorf("Response contains wrong AccountClassification, got %v expected %v", resp.Attributes.AccountClassification, expectedResponse.Account.Attributes.AccountClassification)
+	}
+	if resp.Attributes.JointAccount != expectedResponse.Account.Attributes.JointAccount {
+		t.Errorf("Response contains wrong JointAccount, got %v expected %v", resp.Attributes.JointAccount, expectedResponse.Account.Attributes.JointAccount)
+	}
+	if resp.Attributes.Switched != expectedResponse.Account.Attributes.Switched {
+		t.Errorf("Response contains wrong Switched, got %v expected %v", resp.Attributes.Switched, expectedResponse.Account.Attributes.Switched)
+	}
+	if resp.Attributes.AccountMatchingOptOut != expectedResponse.Account.Attributes.AccountMatchingOptOut {
+		t.Errorf("Response contains wrong AccountMatchingOptOut, got %v expected %v", resp.Attributes.AccountMatchingOptOut, expectedResponse.Account.Attributes.AccountMatchingOptOut)
+	}
+	if expectedResponse.Account.Attributes.Status != "confirmed" {
+		t.Errorf("Response contains wrong Status, got %v expected %v", expectedResponse.Account.Attributes.Status, "confirmed")
+	}
+	if resp.Attributes.SecondaryIdentification != expectedResponse.Account.Attributes.SecondaryIdentification {
+		t.Errorf("Response contains wrong SecondaryIdentification, got %v expected %v", resp.Attributes.SecondaryIdentification, expectedResponse.Account.Attributes.SecondaryIdentification)
 	}
 }
 

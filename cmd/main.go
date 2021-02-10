@@ -74,6 +74,55 @@ func main() {
 				customerID = strings.Replace(customerID, "\n", "", -1)
 				newAccountAttrs.CustomerID = customerID
 
+				fmt.Print("First Name: ")
+				firstName, _ := reader.ReadString('\n')
+				firstName = strings.Replace(firstName, "\n", "", -1)
+				newAccountAttrs.FirstName = firstName
+
+				fmt.Print("BankAccountName: ")
+				bankAccountName, _ := reader.ReadString('\n')
+				bankAccountName = strings.Replace(bankAccountName, "\n", "", -1)
+				newAccountAttrs.BankAccountName = bankAccountName
+
+				fmt.Print("Alternative Bank Account Names: ")
+				alternativeBankAccountNamesTxt, _ := reader.ReadString('\n')
+				alternativeBankAccountNamesTxt = strings.Replace(alternativeBankAccountNamesTxt, "\n", "", -1)
+				alternativeBankAccountNamesSlice := []string(strings.Split(alternativeBankAccountNamesTxt, ","))
+				newAccountAttrs.AlternativeBankAccountNames = alternativeBankAccountNamesSlice
+
+				fmt.Print("Iban: ")
+				iban, _ := reader.ReadString('\n')
+				iban = strings.Replace(iban, "\n", "", -1)
+				newAccountAttrs.Iban = iban
+
+				fmt.Print("Account Classification: ")
+				accountClassification, _ := reader.ReadString('\n')
+				accountClassification = strings.Replace(accountClassification, "\n", "", -1)
+				newAccountAttrs.AccountClassification = accountClassification
+
+				fmt.Print("Joint Account: ")
+				jointAccountTxt, _ := reader.ReadString('\n')
+				jointAccountTxt = strings.Replace(jointAccountTxt, "\n", "", -1)
+				jointAccount, _ := strconv.ParseBool(jointAccountTxt)
+				newAccountAttrs.JointAccount = jointAccount
+
+				fmt.Print("Switched: ")
+				switchedTxt, _ := reader.ReadString('\n')
+				switchedTxt = strings.Replace(switchedTxt, "\n", "", -1)
+				switched, _ := strconv.ParseBool(switchedTxt)
+				newAccountAttrs.Switched = switched
+
+				fmt.Print("Account Matching OptOut: ")
+				accountMatchingOptOutTxt, _ := reader.ReadString('\n')
+				accountMatchingOptOutTxt = strings.Replace(accountMatchingOptOutTxt, "\n", "", -1)
+				accountMatchingOptOut, _ := strconv.ParseBool(accountMatchingOptOutTxt)
+				newAccountAttrs.AccountMatchingOptOut = accountMatchingOptOut
+
+				fmt.Print("Secondary Identificationt: ")
+				secondaryIdentification, _ := reader.ReadString('\n')
+				secondaryIdentification = strings.Replace(secondaryIdentification, "\n", "", -1)
+				newAccountAttrs.SecondaryIdentification = secondaryIdentification
+
 				var newAccount models.Account
 				newAccount.ID = uuid.New()
 				newAccount.Type = "accounts"

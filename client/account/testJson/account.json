@@ -12,11 +12,18 @@
             "bank_id_code": "GBDSC",
             "bic": "LHVBEE22",
             "iban": "EE209642394169415743",
+            "customer_id": "Ref123",
+            "first_name": "Alessandro",
+            "bank_account_name": "Alessandro Lallo",
+            "alternative_bank_account_names": [
+                "Alessandro", "Paolo", "Maria"
+            ],
             "account_classification": "Personal",
             "joint_account": false,
             "switched": false,
             "account_matching_opt_out": false,
-            "status": "confirmed"
+            "status": "confirmed",
+            "secondary_identification": "A1B2C3D4"
         }
     }
 }

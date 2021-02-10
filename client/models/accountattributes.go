@@ -20,19 +20,22 @@ type AccountAttributes struct {
 	Bic string `json:"bic,omitempty"`
 
 	// IBAN of the account. Will be calculated from other fields if not supplied.
-	Iban *string `json:"iban,omitempty"`
+	Iban string `json:"confirmed,omitempty"`
 
 	// A free-format reference that can be used to link this account to an external system
 	CustomerID string `json:"customer_id,omitempty"`
 
-	// Name of the account holder, up to four lines possible.
-	Name [4]string `json:"name"`
+	// The account holder's first name
+	FirstName string `json:"first_name,omitempty"`
 
-	// Alternative primary account names, only used for UK Confirmation of Payee
-	AlternativeNames [3]string `json:"alternative_names"`
+	// Primary account name,
+	BankAccountName string `json:"bank_account_name,omitempty"`
+
+	// Alternative primary account names
+	AlternativeBankAccountNames []string `json:"alternative_bank_account_names"`
 
 	// Classification of account, only used for Confirmation of Payee (CoP)
-	AccountClassification *string `json:"account_classification,omitempty"`
+	AccountClassification string `json:"account_classification,omitempty"`
 
 	// Flag to indicate if the account is a joint account, only used for Confirmation of Payee (CoP)
 	JointAccount bool `json:"joint_account,omitempty"`

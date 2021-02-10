@@ -56,8 +56,38 @@ func TestGetAccount(t *testing.T) {
 	if resp.Attributes.AccountNumber != expectedResponse.Account.Attributes.AccountNumber {
 		t.Errorf("Response contains wrong AccountNumber, got %v expected %v", resp.Attributes.AccountNumber, expectedResponse.Account.Attributes.AccountNumber)
 	}
-	if resp.Attributes.Name[0] != expectedResponse.Account.Attributes.Name[0] {
-		t.Errorf("Response contains wrong Name, got %v expected %v", resp.Attributes.Name[0], expectedResponse.Account.Attributes.Name[0])
+	if resp.Attributes.Iban != expectedResponse.Account.Attributes.Iban {
+		t.Errorf("Response contains wrong Iban, got %v expected %v", resp.Attributes.Iban, expectedResponse.Account.Attributes.Iban)
+	}
+	if resp.Attributes.CustomerID != expectedResponse.Account.Attributes.CustomerID {
+		t.Errorf("Response contains wrong CustomerID, got %v expected %v", resp.Attributes.CustomerID, expectedResponse.Account.Attributes.CustomerID)
+	}
+	if resp.Attributes.FirstName != expectedResponse.Account.Attributes.FirstName {
+		t.Errorf("Response contains wrong FirstName, got %v expected %v", resp.Attributes.FirstName, expectedResponse.Account.Attributes.FirstName)
+	}
+	if resp.Attributes.BankAccountName != expectedResponse.Account.Attributes.BankAccountName {
+		t.Errorf("Response contains wrong BankAccountName, got %v expected %v", resp.Attributes.BankAccountName, expectedResponse.Account.Attributes.BankAccountName)
+	}
+	if resp.Attributes.AlternativeBankAccountNames[0] != expectedResponse.Account.Attributes.AlternativeBankAccountNames[0] {
+		t.Errorf("Response contains wrong AlternativeBankAccountNames, got %v expected %v", resp.Attributes.AlternativeBankAccountNames[0], expectedResponse.Account.Attributes.AlternativeBankAccountNames[0])
+	}
+	if resp.Attributes.AccountClassification != expectedResponse.Account.Attributes.AccountClassification {
+		t.Errorf("Response contains wrong AccountClassification, got %v expected %v", resp.Attributes.AccountClassification, expectedResponse.Account.Attributes.AccountClassification)
+	}
+	if resp.Attributes.JointAccount != expectedResponse.Account.Attributes.JointAccount {
+		t.Errorf("Response contains wrong JointAccount, got %v expected %v", resp.Attributes.JointAccount, expectedResponse.Account.Attributes.JointAccount)
+	}
+	if resp.Attributes.Switched != expectedResponse.Account.Attributes.Switched {
+		t.Errorf("Response contains wrong Switched, got %v expected %v", resp.Attributes.Switched, expectedResponse.Account.Attributes.Switched)
+	}
+	if resp.Attributes.AccountMatchingOptOut != expectedResponse.Account.Attributes.AccountMatchingOptOut {
+		t.Errorf("Response contains wrong AccountMatchingOptOut, got %v expected %v", resp.Attributes.AccountMatchingOptOut, expectedResponse.Account.Attributes.AccountMatchingOptOut)
+	}
+	if resp.Attributes.Status != expectedResponse.Account.Attributes.Status {
+		t.Errorf("Response contains wrong Status, got %v expected %v", resp.Attributes.Status, expectedResponse.Account.Attributes.Status)
+	}
+	if resp.Attributes.SecondaryIdentification != expectedResponse.Account.Attributes.SecondaryIdentification {
+		t.Errorf("Response contains wrong SecondaryIdentification, got %v expected %v", resp.Attributes.SecondaryIdentification, expectedResponse.Account.Attributes.SecondaryIdentification)
 	}
 }
 

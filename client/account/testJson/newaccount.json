@@ -1,20 +1,29 @@
 {
     "data": {
-      "type": "accounts",
-      "id": "ad27e265-9605-4b4b-a0e5-3003ea9cc4dc",
-      "version": 0,
-      "organisation_id": "eb0bd6f5-c3f5-44b2-b677-acd23cdde73c",
-      "attributes": {
-        "country": "GB",
-        "base_currency": "GBP",
-        "account_number": "41426819",
-        "bank_id": "400300",
-        "bank_id_code": "GBDSC",
-        "bic": "NWBKGB22",
-        "name": [
-          "Samantha Holder"
-        ],
-        "status": "pending"
+        "type": "accounts",
+        "id": "ad27e265-9605-4b4b-a0e5-3003ea9cc4dc",
+        "version": 0,
+        "organisation_id": "eb0bd6f5-c3f5-44b2-b677-acd23cdde73c",
+        "attributes": {
+          "country": "GB",
+          "base_currency": "GBP",
+          "account_number": "41426819",
+          "bank_id": "400300",
+          "bank_id_code": "GBDSC",
+          "bic": "NWBKGB22",
+          "iban": "GB11NWBK40030041426819",
+          "customer_id": "Ref123",
+          "first_name": "Alessandro",
+          "bank_account_name": "Alessandro Lallo",
+          "alternative_bank_account_names": [
+            "Alessandro", "Paolo", "Maria"
+          ],
+          "account_classification":"Personal",
+          "joint_account" : false,
+          "switched" : true,
+          "account_matching_opt_out" : false,
+          "status": "confirmed",
+          "secondary_identification": "A1B2C3D4"
       }
     }
   }

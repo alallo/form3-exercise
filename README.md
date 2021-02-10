@@ -2,6 +2,8 @@
 Name: Alessandro Lallo (alessandro.lallo@gmail.com)
 Please forgive my sins :-) 
 
+Whatever is the result of the review, I have really enjoyed this experience and I will continue to explore the Go language in the future.
+
 ![Image of cat](https://i.pinimg.com/474x/77/ad/93/77ad9387b0e57423b3e00b28116cd393.jpg)
 
 ## Description 
@@ -11,8 +13,6 @@ The project is formed by 3 main bits:
 * the client, to access some of the account functionalities available through the light version of the API available
 * httpclient, a wrapper for the http functionalities
 * cmd, a command line useful to manually try the client and interact with the API
-
-Whatever is the result of the review, I have really enjoyed this experience and I will continue to explore the Go language in the future.
 
 ## Project structure
 
@@ -99,6 +99,17 @@ cd internal/httpclient
 go test
 ```
 
+## Issues
+* When creating a new account a couple of fields marked as deprecated in the online docs are actually still available on the endpoint:
+  * first_name
+  * alternative_bank_account_names
+  * bank_account_name
+* When creating a new account some fields are not persisted in the database:
+  * name
+  * alternative_names
+  * joint_account
+  * switched
+  * account_matching_opt_out
 
 
 ## References
