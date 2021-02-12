@@ -1,9 +1,11 @@
 # First time writing code in Go 
 Name: Alessandro Lallo (alessandro.lallo@gmail.com)
-Please forgive my sins :-) 
+<strong>Note</strong>: I have worked on this before the email sent on 11/02 to tell candidates that the list operation was not needed anymore. At this point I have implemented the list operation in this client but it has been properly tested and integration tests are missing. 
+
 
 Whatever is the result of the review, I have really enjoyed this experience and I will continue to explore the Go language in the future.
 
+Please forgive my sins :-) 
 ![Image of cat](https://i.pinimg.com/474x/77/ad/93/77ad9387b0e57423b3e00b28116cd393.jpg)
 
 ## Description 
@@ -13,18 +15,23 @@ The project is formed by 3 main bits:
 * the client, to access some of the account functionalities available through the light version of the API available
 * httpclient, a wrapper for the http functionalities
 * cmd, a command line useful to manually try the client and interact with the API
+* integration tests, they are part of the dockerfile and run at startup 
+
+Few of the integration tests are failing to higlight some of the problem found with the API. Please refer to [Issues](#issues)
 
 ## Project structure
 
 Folder Name | Description
 ------------ | -------------
-client | a Go client to inteface with form3 APIs. This implements some of the "Account" functionalities
+account | a Go client to inteface with form3 APIs. This implements some of the "Account" functionalities
 cmd | Command line app. Useful to play with the client
-internal | packages used by the client that we don't want to expose. This includes a wrapper to help handling an http client
-scripts | docker compose file and DB scripts provided by form3
+httpclient | a wrapper to help handling an http client
+models | this contains the account and acccountattributes models that are shared and used in different files
+integrationTests | contains the integration tests that will be run through the docker-compose file
+scripts | the origninal sql script provided by form3 to create the DB
 
 ## Prerequisite
-To run the command line tool and test the client you need
+To run the command line tool and to test the client you will need
 
 * Go https://golang.org/doc/install
 * Docker https://www.docker.com/get-started
@@ -34,9 +41,10 @@ To run the command line tool and test the client you need
 First of all use the docker compose file from the scripts folder to spin up the form3 API
 
 ```
-cd scripts
 docker-compose up
 ```
+
+This will run the integration tests as part of the process.
 
 Now you can run the command line tool and interact with the client running
 
@@ -44,7 +52,7 @@ Now you can run the command line tool and interact with the client running
 SERVER_URL={your_server_url} HOST={your_host} go run main.go
 ```
 
-because we are using the docker-compose file and not the real API endpoints, this is what we need
+because we are using the docker-compose file and not the real API endpoints, we need to point the client to our local instance of the API
 
 ```
 cd cmd
@@ -85,18 +93,29 @@ func main() {
 ```
 
 ## Testing
-To run tests for the client
+The testing strategy for this project is to use 3 different types of testing:
+* unit tests to test the httpclient package
+* developer tests to test the account package. In this case it uses a mocked server with the expected responses recorded in JSON files
+* integration tests to test the real API endpoints
+
+To run the  tests for the client
 
 ```
-cd client/account
-go test
+cd account
+go test -v
 ```
 
 To run tests for the http client
 
 ```
-cd internal/httpclient
-go test
+cd httpclient
+go test -v
+```
+
+To run the integration tests
+```
+cd integrationTests
+SERVER_URL={your_server_url} go test 
 ```
 
 ## Issues
@@ -107,13 +126,12 @@ go test
 * When creating a new account some fields are not persisted in the database:
   * name
   * alternative_names
-  * joint_account
   * switched
-  * account_matching_opt_out
-* The IBAN field is processed by the API when creating an account (an error is returned when an invalid IBAN is sent) but is not persisted in the database
+* The IBAN field is processed by the API when creating an account (an error is returned when an invalid IBAN is sent) but is not persisted in the database.
+* When trying to delete an existing account but using a wrong version a 404 reponse status is returned. A 409 Conflict response status is expected.
 
 ## References
-This was my first experience with Go so I had to go through different resources to speed up my learning process. Here is a list of websites I have used in the process.
+This was my first experience with Go so I had to go through different resources to speed up my learning process. Here are some of websites I have used in the process.
 
 * https://golang.org/doc/tutorial
 
