@@ -50,7 +50,7 @@ func TestCreateAccountReturnsNewAccountSuccessful(t *testing.T) {
 	if err != nil {
 		t.Errorf("Request is returning an error: got %v", err.Error())
 	} else {
-		checkAccountResponse(t, resp, &newAccount)
+		account.CheckAccountResponse(t, resp, &newAccount)
 	}
 }
 

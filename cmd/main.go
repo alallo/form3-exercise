@@ -148,7 +148,12 @@ func main() {
 				accountID = strings.Replace(accountID, "\n", "", -1)
 
 				var req account.FetchRequest
-				req.AccountID = accountID
+				var err error
+				req.AccountID, err = uuid.Parse(accountID)
+				if err != nil {
+					fmt.Println("Error: ", err)
+					break
+				}
 				req.Host = host
 				fecthAccount(host, serverURL, req)
 				break
@@ -180,8 +185,13 @@ func main() {
 			fmt.Println("Delete")
 			for {
 				fmt.Print("Account ID: ")
-				accountID, _ := reader.ReadString('\n')
-				accountID = strings.Replace(accountID, "\n", "", -1)
+				accountIDTxt, _ := reader.ReadString('\n')
+				accountIDTxt = strings.Replace(accountIDTxt, "\n", "", -1)
+				accountID, err := uuid.Parse(accountIDTxt)
+				if err != nil {
+					fmt.Println("Error: ", err)
+					break
+				}
 
 				fmt.Print("Version: ")
 				version, _ := reader.ReadString('\n')

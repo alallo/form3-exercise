@@ -10,7 +10,7 @@ import (
 )
 
 // Helper function to compare accounts
-func checkAccountResponse(t *testing.T, resp *models.Account, expectedAccount *models.Account) {
+func CheckAccountResponse(t *testing.T, resp *models.Account, expectedAccount *models.Account) {
 	if resp.ID != expectedAccount.ID {
 		t.Errorf("Response contains wrong ID, got %v expected %v", resp.ID, expectedAccount.ID)
 	}
@@ -50,6 +50,22 @@ func checkAccountResponse(t *testing.T, resp *models.Account, expectedAccount *m
 	if resp.Attributes.BankAccountName != expectedAccount.Attributes.BankAccountName {
 		t.Errorf("Response contains wrong BankAccountName, got %v expected %v", resp.Attributes.BankAccountName, expectedAccount.Attributes.BankAccountName)
 	}
+
+	responseLength := len(resp.Attributes.AlternativeBankAccountNames)
+	expectedLength := len(expectedAccount.Attributes.AlternativeBankAccountNames)
+
+	if responseLength != expectedLength {
+		t.Errorf("AlternativeBankAccountNames array is wrong, got %v expected %v", responseLength, expectedLength)
+	} else {
+		i := 0
+		for i < responseLength {
+			if resp.Attributes.AlternativeBankAccountNames[i] != expectedAccount.Attributes.AlternativeBankAccountNames[i] {
+				t.Errorf("Response contains wrong AlternativeBankAccountNames, got %v expected %v", resp.Attributes.AlternativeBankAccountNames[i], expectedAccount.Attributes.AlternativeBankAccountNames[i])
+			}
+			i = i + 1
+		}
+	}
+
 	if resp.Attributes.AlternativeBankAccountNames[0] != expectedAccount.Attributes.AlternativeBankAccountNames[0] {
 		t.Errorf("Response contains wrong AlternativeBankAccountNames, got %v expected %v", resp.Attributes.AlternativeBankAccountNames[0], expectedAccount.Attributes.AlternativeBankAccountNames[0])
 	}

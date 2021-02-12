@@ -20,6 +20,7 @@ The project is formed by 3 main bits:
 
 Few of the integration tests are failing to highlight some of the problem found with the API. Please refer to [Issues](#issues)
 
+For the purpose of this exercise the set up of data needed for the integration tests are done in code through the init function of the integration package. In an ideal world the data would be part of a sql script that would run with the table creation (or a sandbox provided by the third-party API)
 ## Project structure
 
 Folder Name | Description
@@ -61,6 +62,8 @@ SERVER_URL=http://localhost:8080 HOST=http://localhost:8080 go run main.go
 ```
 
 ## Example
+This example is provided assuming the account package is hosted on a public repo called "form3-interview"
+
 ```Go
 package main
 
