@@ -7,6 +7,7 @@ Name: Alessandro Lallo (alessandro.lallo@gmail.com)
 Whatever is the result of the review, I have really enjoyed this experience and I will continue to explore the Go language in the future.
 
 Please forgive my sins :-) 
+
 ![Image of cat](https://i.pinimg.com/474x/77/ad/93/77ad9387b0e57423b3e00b28116cd393.jpg)
 
 ## Description 
