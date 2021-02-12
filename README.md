@@ -1,6 +1,7 @@
 # First time writing code in Go 
 Name: Alessandro Lallo (alessandro.lallo@gmail.com)
-<strong>Note</strong>: I have worked on this before the email sent on 11/02 to tell candidates that the list operation was not needed anymore. At this point I have implemented the list operation in this client but it has been properly tested and integration tests are missing. 
+
+<strong>Note</strong>: I have worked on this before the email sent on 11/02 to tell candidates that the list operation was not needed anymore. At this point I have implemented the list operation in this client but it has not been properly tested and integration tests are missing. 
 
 
 Whatever is the result of the review, I have really enjoyed this experience and I will continue to explore the Go language in the future.
@@ -17,7 +18,7 @@ The project is formed by 3 main bits:
 * cmd, a command line useful to manually try the client and interact with the API
 * integration tests, they are part of the dockerfile and run at startup 
 
-Few of the integration tests are failing to higlight some of the problem found with the API. Please refer to [Issues](#issues)
+Few of the integration tests are failing to highlight some of the problem found with the API. Please refer to [Issues](#issues)
 
 ## Project structure
 
