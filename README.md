@@ -1,15 +1,3 @@
-# First time writing code in Go 
-Name: Alessandro Lallo (alessandro.lallo@gmail.com)
-
-<strong>Note</strong>: I have worked on this before the email sent on 11/02 to tell candidates that the list operation was not needed anymore. At this point I have implemented the list operation in this client but it has not been properly tested and integration tests are missing. 
-
-
-Whatever is the result of the review, I have really enjoyed this experience and I will continue to explore the Go language in the future.
-
-Please forgive my sins :-) 
-
-![Image of cat](https://i.pinimg.com/474x/77/ad/93/77ad9387b0e57423b3e00b28116cd393.jpg)
-
 ## Description 
 Take home exercise done as part of the form3 hiring process. 
 
